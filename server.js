@@ -216,10 +216,10 @@ app.post('/analisis', function (req, res) {
   serviceUrl: process.env.URL,
 });
 
-const text = 'Does this count as a post mehtod, I do not know. Whatever I will try to do a normal post.';
 
+const text = JSON.stringify(req.body.fname)
 const toneParams = {
-  toneInput: { 'text': text },
+  toneInput: { 'text': text},
   contentType: 'application/json',
 };
 
