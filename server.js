@@ -203,24 +203,29 @@ app.listen(port, function() {
     console.log("To view your app, open this link in your browser: http://localhost:" + port);
 });
 
-const ToneAnalyzer = require('ibm-watson/tone-analyzer/v3');
-
-const toneAnalyzer = new ToneAnalyzer({
+const ToneAnalyzerV3 = require('ibm-watson/tone-analyzer/v3');
+const { IamAuthenticator } = require('ibm-watson/auth');
+const toneAnalyzer = new ToneAnalyzerV3({
   version: '2017-09-21',
-  apikey: process.env.API_key,
-  url:process.env.URL
+  authenticator: new IamAuthenticator({
+    apikey: process.env.API_key,
+  }),
+  serviceUrl: process.env.URL,
 });
 
+const text = 'Does this count as a post mehtod, I do not know. Whatever I will try to do a normal post.';
 
-const texto="what thw fuck am I doing";
 const toneParams = {
-  tone_input: { 'text': texto },
-  content_type: 'application/json',
+  toneInput: { 'text': text },
+  contentType: 'application/json',
 };
 
+toneAnalyzer.tone(toneParams)
+  .then(toneAnalysis => {
+    console.log(JSON.stringify(toneAnalysis, null, 2));
+  })
+  .catch(err => {
+    console.log('error:', err);
+  });
 
-toneAnalyzer.tone(toneParams).then(toneAnalysis => {
-  console.log(JSON.stringify(toneAnalysis, null, 2));
-}).catch(err => {
-  console.log('error:', err);
-});
+  
