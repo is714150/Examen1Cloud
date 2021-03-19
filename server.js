@@ -10,7 +10,6 @@ app.use(bodyParser.json())
 
 const dotenv = require('dotenv');
 dotenv.config();
-console.log(process.env.URL)
 
 let mydb, cloudant;
 var vendor; // Because the MongoDB and Cloudant use different API commands, we
@@ -208,12 +207,20 @@ const ToneAnalyzer = require('ibm-watson/tone-analyzer/v3');
 
 const toneAnalyzer = new ToneAnalyzer({
   version: '2017-09-21',
-  iam_apikey: process.env.API_key,
+  apikey: process.env.API_key,
   url:process.env.URL
 });
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+
+const texto="what thw fuck am I doing";
+const toneParams = {
+  tone_input: { 'text': texto },
+  content_type: 'application/json',
+};
+
+
+toneAnalyzer.tone(toneParams).then(toneAnalysis => {
+  console.log(JSON.stringify(toneAnalysis, null, 2));
+}).catch(err => {
+  console.log('error:', err);
 });
