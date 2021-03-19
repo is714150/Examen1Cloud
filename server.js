@@ -203,9 +203,12 @@ app.listen(port, function() {
     console.log("To view your app, open this link in your browser: http://localhost:" + port);
 });
 
-const ToneAnalyzerV3 = require('ibm-watson/tone-analyzer/v3');
-const { IamAuthenticator } = require('ibm-watson/auth');
-const toneAnalyzer = new ToneAnalyzerV3({
+
+
+app.post('/analisis', function (req, res) {
+  const ToneAnalyzerV3 = require('ibm-watson/tone-analyzer/v3');
+  const { IamAuthenticator } = require('ibm-watson/auth');
+  const toneAnalyzer = new ToneAnalyzerV3({
   version: '2017-09-21',
   authenticator: new IamAuthenticator({
     apikey: process.env.API_key,
@@ -227,5 +230,4 @@ toneAnalyzer.tone(toneParams)
   .catch(err => {
     console.log('error:', err);
   });
-
-  
+  })
