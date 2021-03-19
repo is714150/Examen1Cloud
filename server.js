@@ -2,12 +2,15 @@ var express = require("express");
 var app = express();
 var cfenv = require("cfenv");
 var bodyParser = require('body-parser')
-
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
+
+const dotenv = require('dotenv');
+dotenv.config();
+console.log(process.env.URL)
 
 let mydb, cloudant;
 var vendor; // Because the MongoDB and Cloudant use different API commands, we
@@ -199,4 +202,18 @@ app.use(express.static(__dirname + '/views'));
 var port = process.env.PORT || 3000
 app.listen(port, function() {
     console.log("To view your app, open this link in your browser: http://localhost:" + port);
+});
+
+const ToneAnalyzer = require('ibm-watson/tone-analyzer/v3');
+
+const toneAnalyzer = new ToneAnalyzer({
+  version: '2017-09-21',
+  iam_apikey: process.env.API_key,
+  url:process.env.URL
+});
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 });
